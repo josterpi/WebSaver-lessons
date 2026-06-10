@@ -27,10 +27,10 @@ urlpatterns = [
     # main paths
     path('add/', main_views.add_url, name='add_url'),
     path('library/', main_views.url_library, name='url_library'),
-    path('my_library', main_views.myurls_library, name='myurls_library'),
+    path('my_library/', main_views.myurls_library, name='myurls_library'),
     path('update/<int:pk>/', main_views.update_url, name='update_url'),
     path('delete/<int:pk>/', main_views.delete_url, name='delete_url'),
-    path('about', main_views.about_view, name='how_it_works'),
+    path('about/', main_views.about_view, name='how_it_works'),
 
 
     # sign_up paths
