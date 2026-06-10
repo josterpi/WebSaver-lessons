@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import URLForm
 from sign_up.models import UserContent, User
 from .qr_code import generate_qr_code
@@ -68,7 +68,7 @@ def myurls_library(request):
 
 # Update view
 def update_url(request, pk):
-    saved_url = UserContent.objects.get(id=pk)
+    saved_url = get_object_or_404(UserContent, id=pk)
     user_id = request.session.get('user_id')
 
     if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can edit it
@@ -102,7 +102,7 @@ def update_url(request, pk):
 
 # delete view
 def delete_url(request, pk):
-    saved_url = UserContent.objects.get(id=pk)
+    saved_url = get_object_or_404(UserContent, id=pk)
     user_id = request.session.get('user_id')
 
     if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can delete it
