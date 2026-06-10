@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import URLForm
-from sign_up.models import UserContent, User
+from sign_up.models import UserContent
 from .qr_code import generate_qr_code
 
 
@@ -10,10 +10,8 @@ def add_url(request):
         libraryform = URLForm(request.POST)
         if libraryform.is_valid():
             url_entry = libraryform.save(commit=False)
-            user_id = request.session.get("user_id")  # using session to get the current user_id
-            if user_id:
-                url_entry.user = User.objects.get(id=int(user_id))
-
+            if request.user.is_authenticated:
+                url_entry.user = request.user
             url = url_entry.url
             name = url_entry.name
             url_entry.image_path = generate_qr_code(url, name)
@@ -42,8 +40,7 @@ def url_library(request):
 
 # send to personal view
 def myurls_library(request):
-    user_id = request.session.get('user_id')
-    library = UserContent.objects.filter(user=user_id) if user_id else UserContent.objects.none()
+    library = UserContent.objects.filter(user=request.user) if request.user.is_authenticated else UserContent.objects.none()
     # BUG If the user isn't logged in, redirect to login page instead of showing empty library
 
     edit_mode = False
@@ -52,11 +49,11 @@ def myurls_library(request):
 
     if edit_id:
         try:
-            saved_url = UserContent.objects.get(id=edit_id, user=user_id)
+            saved_url = UserContent.objects.get(id=edit_id, user=request.user)
             libraryform = URLForm(instance=saved_url)
             edit_mode = True
         except UserContent.DoesNotExist:
-            pass  # fallback to blank form if object not found or user mismatch
+            pass
 
     return render(request, 'library.html', {
         'library': library,
@@ -69,9 +66,8 @@ def myurls_library(request):
 # Update view
 def update_url(request, pk):
     saved_url = get_object_or_404(UserContent, id=pk)
-    user_id = request.session.get('user_id')
 
-    if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can edit it
+    if not request.user.is_authenticated or saved_url.user != request.user:  # only the user that created the url can edit it
         return redirect('url_library')
 
     if request.method == 'POST':
@@ -87,10 +83,7 @@ def update_url(request, pk):
     else:
         libraryform = URLForm(instance=saved_url)
 
-    if user_id:
-        library = UserContent.objects.filter(user=int(user_id))  # show only user's URLs
-    else:
-        library = UserContent.objects.all()  # show all URLs if not logged in
+    library = UserContent.objects.filter(user=request.user)
 
     return render(request, 'library.html', {
         'libraryform': libraryform,
@@ -105,9 +98,8 @@ def delete_url(request, pk):
     if request.method != 'POST':
         return redirect('myurls_library')
     saved_url = get_object_or_404(UserContent, id=pk)
-    user_id = request.session.get('user_id')
 
-    if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can delete it
+    if not request.user.is_authenticated or saved_url.user != request.user:  # only the user that created the url can delete it
         return redirect('url_library')
     saved_url.delete()
     return redirect('myurls_library')

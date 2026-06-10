@@ -1,36 +1,9 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-import bcrypt
 
 
-class User(models.Model):
-    name = models.CharField(max_length=50, null=False)
-    email = models.EmailField(unique=True, null=False)
-    username = models.CharField(max_length=50, unique=True, null=False)
-    password = models.CharField(max_length=128, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def set_password(self, raw_password):
-        self.password = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        self.save()
-
-    def check_password(self, raw_password):
-        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
-
-    def update_password(self, raw_password):
-        self.set_password(raw_password)
-
-    def update_username(self, new_username):
-        self.username = new_username
-        self.save()
-
-    def update_email(self, new_email):
-        self.email = new_email
-        self.save()
-
-    def update_name(self, new_name):
-        self.name = new_name
-        self.save()
+class User(AbstractUser):
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.username

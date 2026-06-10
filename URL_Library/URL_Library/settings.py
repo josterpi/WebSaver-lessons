@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-aqbflsme-6uuwm7hf$44)x-v3(rryb4&3jbeivghcoh!6$zu&h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["gimli",]
 
 
 # Application definition
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "sign_up",
   
 ]
+
+AUTH_USER_MODEL = 'sign_up.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

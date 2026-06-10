@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .models import User
 from .forms import SignupForm
 
-# Create your views here.
 
 def signup(request):
     form = SignupForm()
@@ -15,8 +15,10 @@ def signup(request):
                 username=form.cleaned_data["username"],
             )
             user.set_password(form.cleaned_data["password"])
+            user.save()
             return redirect("login")
     return render(request, "login_signup.html", {"signup_form": form})
+
 
 def login(request):
     if request.method == "POST":
@@ -26,16 +28,23 @@ def login(request):
         if not all([login_input, password]):
             return render(request, "login_signup.html", {"error": "All fields are required"})
 
-        user = User.objects.filter(username=login_input).first() or User.objects.filter(email=login_input).first()
+        user = authenticate(request, username=login_input, password=password)
+        if user is None:
+            try:
+                user_obj = User.objects.get(email=login_input)
+                user = authenticate(request, username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                pass
 
-        if user and user.check_password(password):
-            request.session["user_id"] = user.id
+        if user is not None:
+            auth_login(request, user)
             return redirect("how_it_works")
-        else:
-            return render(request, "login_signup.html", {"error": "Invalid credentials"})
+
+        return render(request, "login_signup.html", {"error": "Invalid credentials"})
 
     return render(request, "login_signup.html")
 
+
 def logout(request):
-    request.session.flush()  # Clears all session data
-    return redirect("login") # Redirect to login page after logout
+    auth_logout(request)
+    return redirect("login")
