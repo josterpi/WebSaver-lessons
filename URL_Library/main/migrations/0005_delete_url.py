@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Main', '0004_alter_url_description_alter_url_image_path'),
+        ('main', '0004_alter_url_description_alter_url_image_path'),
     ]
 
     operations = [

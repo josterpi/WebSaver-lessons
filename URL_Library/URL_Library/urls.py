@@ -19,8 +19,8 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from Main import views as main_views
-from Sign_up import views as signup_views
+from main import views as main_views
+from sign_up import views as signup_views
 # define paths for all pages
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,5 +41,5 @@ urlpatterns = [
     
 
 ]
-## define path for qr images
+# define path for qr images
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

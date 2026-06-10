@@ -1,10 +1,10 @@
 from django import forms
-from Sign_up.models import UserContent
+from sign_up.models import UserContent
 
 class URLForm(forms.ModelForm):
     class Meta:
         model = UserContent
-        fields = ['name','url','description']
+        fields = ['name', 'url', 'description']
         # styles for form
         widgets = {
 

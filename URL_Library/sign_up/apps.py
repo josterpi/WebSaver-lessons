@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class QrGeneratorConfig(AppConfig):
+class SignUpConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "Main"
+    name = "sign_up"

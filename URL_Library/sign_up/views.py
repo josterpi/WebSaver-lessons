@@ -12,24 +12,24 @@ def signup(request):
         confirm_password = request.POST.get("confirm_password")
 
         if not all([name, email, username, password, confirm_password]):
-            return render(request, "MK_sample login_signup.html", {"error": "All fields are required"})
+            return render(request, "login_signup.html", {"error": "All fields are required"})
         
         if User.objects.filter(email=email).exists():
-            return render(request, "MK_sample login_signup.html", {"error": "Email already in use"})
+            return render(request, "login_signup.html", {"error": "Email already in use"})
         
         if User.objects.filter(username=username).exists():
-            return render(request, "MK_sample login_signup.html", {"error": "Username already in use"})
+            return render(request, "login_signup.html", {"error": "Username already in use"})
         
         if password == confirm_password:
             user = User(name=name, email=email, username=username)
-            user.SetPassword(password)
+            user.set_password(password)
             user.save()
             
             return redirect("login")
         else:
-            return render(request, "MK_sample login_signup.html", {"error": "Passwords do not match"})
+            return render(request, "login_signup.html", {"error": "Passwords do not match"})
 
-    return render(request, "MK_sample login_signup.html")
+    return render(request, "login_signup.html")
 
 def login(request):
     if request.method == "POST":
@@ -37,17 +37,17 @@ def login(request):
         password = request.POST.get("password")
 
         if not all([login_input, password]):
-            return render(request, "MK_sample login_signup.html", {"error": "All fields are required"})
+            return render(request, "login_signup.html", {"error": "All fields are required"})
 
         user = User.objects.filter(username=login_input).first() or User.objects.filter(email=login_input).first()
 
-        if user and user.CheckPassword(password):
+        if user and user.check_password(password):
             request.session["user_id"] = user.id
-            return redirect("how_it_works")  ##redirect to the main app once login is successful here is where the login connects to the main app
+            return redirect("how_it_works")
         else:
-            return render(request, "MK_sample login_signup.html", {"error": "Invalid credentials"})
+            return render(request, "login_signup.html", {"error": "Invalid credentials"})
 
-    return render(request, "MK_sample login_signup.html")
+    return render(request, "login_signup.html")
 
 def logout(request):
     request.session.flush()  # Clears all session data

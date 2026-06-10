@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Sign_up', '0002_alter_usercontent_url_alter_usercontent_content'),
+        ('sign_up', '0002_alter_usercontent_url_alter_usercontent_content'),
     ]
 
     operations = [
