@@ -18,7 +18,7 @@ def add_url(request):
             name = url_entry.name
             url_entry.image_path = generate_qr_code(url, name)
             url_entry.save()
-            return redirect('/my_library')
+            return redirect('myurls_library')
     else:
         libraryform = URLForm()
 
@@ -72,7 +72,7 @@ def update_url(request, pk):
     user_id = request.session.get('user_id')
 
     if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can edit it
-        return redirect('/library')
+        return redirect('url_library')
 
     if request.method == 'POST':
         libraryform = URLForm(request.POST, instance=saved_url)  # prefill the form with existing data
@@ -83,7 +83,7 @@ def update_url(request, pk):
             name = url_entry.name
             url_entry.image_path = generate_qr_code(url, name)
             url_entry.save()
-            return redirect('/my_library')
+            return redirect('myurls_library')
     else:
         libraryform = URLForm(instance=saved_url)
 
@@ -106,9 +106,9 @@ def delete_url(request, pk):
     user_id = request.session.get('user_id')
 
     if not user_id or saved_url.user.id != int(user_id):  # only the user that created the url can delete it
-        return redirect('/library')
+        return redirect('url_library')
     saved_url.delete()
-    return redirect('/my_library')
+    return redirect('myurls_library')
 
 
 # about page view
