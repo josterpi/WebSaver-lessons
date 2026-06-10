@@ -2,7 +2,7 @@ import qrcode
 import os
 from django.conf import settings
 
-def generate_qr_code(url, name, size=6, border_size=4, color1='black', color2='white'):
+def generate_qr_code(url: str, name: str, size: int = 6, border_size: int = 4, color1: str = 'black', color2: str = 'white') -> str:
     # resolves directory for created image
     qr_code_dir = os.path.join(settings.MEDIA_ROOT, 'qr_codes')
     os.makedirs(qr_code_dir, exist_ok=True)
@@ -19,5 +19,5 @@ def generate_qr_code(url, name, size=6, border_size=4, color1='black', color2='w
     file_name = f'{name}.png'  # FIXME filename collision if the same name is used twice
     full_path = os.path.join(qr_code_dir, file_name)
     img.save(full_path)
-    
+
     return f'{settings.MEDIA_URL}qr_codes/{file_name}'

@@ -5,5 +5,5 @@ from django.db import models
 class User(AbstractUser):
     name = models.CharField(max_length=50)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username

@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
 from .forms import URLForm
 from .models import UserContent
 from .qr_code import generate_qr_code
 
 
 @login_required
-def add_url(request):
+def add_url(request: HttpRequest) -> HttpResponse:
     libraryform = URLForm()
     if request.method == 'POST':
         libraryform = URLForm(request.POST)
@@ -30,7 +31,7 @@ def add_url(request):
 
 #Emmanuel says we dont need this anymore i am not sure why we dont i will ask him tonight
 @login_required
-def url_library(request):
+def url_library(request: HttpRequest) -> HttpResponse:
     library = UserContent.objects.all()
     libraryform = URLForm()
     return render(request, 'library.html', {
@@ -41,7 +42,7 @@ def url_library(request):
 
 # send to personal view
 @login_required
-def myurls_library(request):
+def myurls_library(request: HttpRequest) -> HttpResponse:
     library = UserContent.objects.filter(user=request.user)
 
     edit_mode = False
@@ -66,7 +67,7 @@ def myurls_library(request):
 
 # Update view
 @login_required
-def update_url(request, pk):
+def update_url(request: HttpRequest, pk: int) -> HttpResponse:
     saved_url = get_object_or_404(UserContent, id=pk)
 
     if saved_url.user != request.user:  # only the user that created the url can edit it
@@ -97,7 +98,7 @@ def update_url(request, pk):
 
 # delete view
 @login_required
-def delete_url(request, pk):
+def delete_url(request: HttpRequest, pk: int) -> HttpResponse:
     if request.method != 'POST':
         return redirect('myurls_library')
     saved_url = get_object_or_404(UserContent, id=pk)
@@ -109,5 +110,5 @@ def delete_url(request, pk):
 
 
 # about page view
-def about_view(request):
+def about_view(request: HttpRequest) -> HttpResponse:
     return render(request, "how_it_works.html")

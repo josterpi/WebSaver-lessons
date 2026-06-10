@@ -10,7 +10,7 @@ class SignupForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=True)
 
 
-    def clean(self):
+    def clean(self) -> dict:
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")

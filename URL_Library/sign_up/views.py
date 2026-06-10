@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.http import HttpRequest, HttpResponse
 from .models import User
 from .forms import SignupForm
 
 
-def signup(request):
+def signup(request: HttpRequest) -> HttpResponse:
     form = SignupForm()
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -20,7 +21,7 @@ def signup(request):
     return render(request, "login_signup.html", {"signup_form": form})
 
 
-def login(request):
+def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         login_input = request.POST.get("email")
         password = request.POST.get("password")
@@ -45,6 +46,6 @@ def login(request):
     return render(request, "login_signup.html")
 
 
-def logout(request):
+def logout(request: HttpRequest) -> HttpResponse:
     auth_logout(request)
     return redirect("login")
