@@ -96,7 +96,7 @@
 <main>
   <div class="container1">
     <h2 id="form-title">Welcome</h2>
-    <form id="signin-form" method="POST" action="{% url 'login' %}">
+    <form id="signin-form" class="{% if signup_form.errors %}hidden{% endif %}" method="POST" action="{% url 'login' %}">
       {% csrf_token %}
       <div class="input-group1">
         <label for="signin-email">Email or Username</label>
@@ -113,8 +113,17 @@
       </div>
     </form>
 
-    <form id="signup-form" class="hidden" method="POST" action="{% url 'signup' %}">
+    <form id="signup-form" class="{% if not signup_form.errors %}hidden{% endif %}" method="POST" action="{% url 'signup' %}">
       {% csrf_token %}
+      {% if signup_form.errors %}
+        <div style="color: #c0392b; font-size: 14px; margin-bottom: 10px;">
+          {% for field, errors in signup_form.errors.items %}
+            {% for error in errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      {% endif %}
       <div class="input-group1">
         <label for="signup-name">Name</label>
         <input type="text" id="signup-name" name="name" required placeholder="Enter your name here">

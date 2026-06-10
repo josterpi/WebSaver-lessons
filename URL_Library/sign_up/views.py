@@ -1,35 +1,22 @@
 from django.shortcuts import render, redirect
 from .models import User
+from .forms import SignupForm
 
 # Create your views here.
 
 def signup(request):
+    form = SignupForm()
     if request.method == "POST":
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
-
-        if not all([name, email, username, password, confirm_password]):
-            return render(request, "login_signup.html", {"error": "All fields are required"})
-        
-        if User.objects.filter(email=email).exists():
-            return render(request, "login_signup.html", {"error": "Email already in use"})
-        
-        if User.objects.filter(username=username).exists():
-            return render(request, "login_signup.html", {"error": "Username already in use"})
-        
-        if password == confirm_password:
-            user = User(name=name, email=email, username=username)
-            user.set_password(password)
-            user.save()
-            
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = User(
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                username=form.cleaned_data["username"],
+            )
+            user.set_password(form.cleaned_data["password"])
             return redirect("login")
-        else:
-            return render(request, "login_signup.html", {"error": "Passwords do not match"})
-
-    return render(request, "login_signup.html")
+    return render(request, "login_signup.html", {"signup_form": form})
 
 def login(request):
     if request.method == "POST":
