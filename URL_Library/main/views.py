@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .forms import URLForm
 from sign_up.models import UserContent
 from .qr_code import generate_qr_code
 
 
+@login_required
 def add_url(request):
     libraryform = URLForm()
     if request.method == 'POST':
         libraryform = URLForm(request.POST)
         if libraryform.is_valid():
             url_entry = libraryform.save(commit=False)
-            if request.user.is_authenticated:
-                url_entry.user = request.user
+            url_entry.user = request.user
             url = url_entry.url
             name = url_entry.name
             url_entry.image_path = generate_qr_code(url, name)
@@ -28,8 +29,8 @@ def add_url(request):
 
 
 #Emmanuel says we dont need this anymore i am not sure why we dont i will ask him tonight
+@login_required
 def url_library(request):
-    # BUG This doesn't check for a logged in user. It just shows all the links.
     library = UserContent.objects.all()
     libraryform = URLForm()
     return render(request, 'library.html', {
@@ -39,9 +40,9 @@ def url_library(request):
 
 
 # send to personal view
+@login_required
 def myurls_library(request):
-    library = UserContent.objects.filter(user=request.user) if request.user.is_authenticated else UserContent.objects.none()
-    # BUG If the user isn't logged in, redirect to login page instead of showing empty library
+    library = UserContent.objects.filter(user=request.user)
 
     edit_mode = False
     edit_id = request.GET.get('edit')
@@ -64,10 +65,11 @@ def myurls_library(request):
 
 
 # Update view
+@login_required
 def update_url(request, pk):
     saved_url = get_object_or_404(UserContent, id=pk)
 
-    if not request.user.is_authenticated or saved_url.user != request.user:  # only the user that created the url can edit it
+    if saved_url.user != request.user:  # only the user that created the url can edit it
         return redirect('url_library')
 
     if request.method == 'POST':
@@ -94,12 +96,13 @@ def update_url(request, pk):
 
 
 # delete view
+@login_required
 def delete_url(request, pk):
     if request.method != 'POST':
         return redirect('myurls_library')
     saved_url = get_object_or_404(UserContent, id=pk)
 
-    if not request.user.is_authenticated or saved_url.user != request.user:  # only the user that created the url can delete it
+    if saved_url.user != request.user:  # only the user that created the url can delete it
         return redirect('url_library')
     saved_url.delete()
     return redirect('myurls_library')
