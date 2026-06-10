@@ -1,0 +1,12 @@
+[project]
+name = "websaver"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "django>=6.0.6",
+    "pillow>=12.2.0",
+    "qrcode>=8.2",
+]
