@@ -1,5 +1,5 @@
 from django import forms
-from sign_up.models import UserContent
+from .models import UserContent
 
 class URLForm(forms.ModelForm):
     class Meta:

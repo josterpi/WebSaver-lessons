@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import URLForm
-from sign_up.models import UserContent
+from .models import UserContent
 from .qr_code import generate_qr_code
 
 
