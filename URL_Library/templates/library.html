@@ -1,94 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WebSaver</title>
+{% extends "master.html" %}
 
-  <!-- Bootstrap 5.3 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+{% block extra_css %}
+<style>
+  :root {
+    --accent: #6c63ff;
+    --accent-100: #eef0ff;
+    --text-muted: #6c757d;
+  }
 
-  <style>
-    :root {
-      --accent: #6c63ff;
-      --accent-100: #eef0ff;
-      --text-muted: #6c757d;
-    }
+  body {
+    background: linear-gradient(135deg, var(--accent-100), #ffffff);
+    min-height: 100vh;
+  }
 
-    body {
-      background: linear-gradient(135deg, var(--accent-100), #ffffff);
-      min-height: 100vh;
-    }
+  /* Navbar */
+  .navbar {
+    border-radius: 1rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+  .navbar-brand { color: var(--accent) !important; font-weight: 600; }
+  .nav-link:hover, .nav-link.active { color: var(--accent) !important; }
 
-    /* Navbar */
-    .navbar {
-      border-radius: 1rem;
-      box-shadow: 0 6px 20px rgba(0,0,0,.08);
-    }
-    .navbar-brand { color: var(--accent) !important; font-weight: 600; }
-    .nav-link:hover, .nav-link.active { color: var(--accent) !important; }
+  /* Buttons */
+  .btn-outline-primary { color: var(--accent); border-color: var(--accent); }
+  .btn-outline-primary:hover,
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    /* Buttons */
-    .btn-outline-primary { color: var(--accent); border-color: var(--accent); }
-    .btn-outline-primary:hover,
-    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  /* Cards */
+  .card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0,0,0,.1); }
+  .title { font-weight: 600; }
 
-    /* Cards */
-    .card {
-      border: 0;
-      border-radius: 1rem;
-      box-shadow: 0 10px 24px rgba(0,0,0,.08);
-      transition: transform .15s ease, box-shadow .2s ease;
-    }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0,0,0,.1); }
-    .title { font-weight: 600; }
+  /* Image container */
+  .image-container {
+    width: 100%;
+    height: 180px;
+    background: #fafbff;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-bottom: 1px solid #f1f2f7;
+    padding: .5rem;
+  }
+  .image-container img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* Image container */
-    .image-container {
-      width: 100%;
-      height: 180px;
-      background: #fafbff;
-      border-top-left-radius: 1rem;
-      border-top-right-radius: 1rem;
-      border-bottom: 1px solid #f1f2f7;
-      padding: .5rem;
-    }
-    .image-container img { width: 100%; height: 100%; object-fit: contain; }
+  /* Description */
+  .description {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    min-height: 2.5em;
+    white-space: pre-wrap;
+  }
 
-    /* Description */
-    .description {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-      min-height: 2.5em;
-      white-space: pre-wrap;
-    }
+  /* Empty state */
+  .empty-accent { color: var(--accent); font-weight: 600; }
 
-    /* Empty state */
-    .empty-accent { color: var(--accent); font-weight: 600; }
+  .soft-badge {
+    background: var(--accent-100);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: .2rem .6rem;
+    font-size: .75rem;
+    font-weight: 600;
+  }
 
-    .soft-badge {
-      background: var(--accent-100);
-      color: var(--accent);
-      border-radius: 999px;
-      padding: .2rem .6rem;
-      font-size: .75rem;
-      font-weight: 600;
-    }
+  .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 .2rem rgba(108,99,255,.2);
+  }
+</style>
+{% endblock %}
 
-    .form-control:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 .2rem rgba(108,99,255,.2);
-    }
-  </style>
-</head>
-<body class="bg-light">
-   <!-- header with website title -->
-  <header class="text-white py-3 px-4" style="background-color: #6c63ff;">
-      <h2 class="m-0">WebSaver.com</h2>
-  </header>
-
+{% block body %}
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white border my-3 mx-3 px-3">
     <a class="navbar-brand" href="{% url 'how_it_works' %}">
@@ -159,13 +147,10 @@
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
             <div class="card h-100">
               <div class="card-body pb-0">
-                <!-- Edit -->
                 <a class="float-start btn btn-sm btn-link text-muted px-0"
                    href="{% url 'myurls_library' %}?edit={{ i.id }}">
                    <i class="bi bi-three-dots"></i>
                 </a>
-
-                <!-- Delete -->
                 <button type="button" class="btn-close float-end" data-bs-toggle="modal"
                         data-bs-target="#modal-delete-{{ i.id }}" aria-label="Delete"></button>
               </div>
@@ -178,14 +163,12 @@
                 <h5 class="title mb-1">{{ i.name }}</h5>
                 <div class="text-muted small mb-2"><em>{{ i.created_at }}</em></div>
 
-                <!-- Inline Description -->
                 {% if i.description %}
                   <p class="description">{{ i.description }}</p>
                 {% else %}
                   <p class="description text-muted"><em>No description provided.</em></p>
                 {% endif %}
 
-                <!-- Open Link Button -->
                 <a href="{{ i.url }}" target="_blank" class="btn btn-primary w-100">
                   <i class="bi bi-box-arrow-up-right"></i> Open: {{ i.name }}
                 </a>
@@ -230,17 +213,16 @@
       <div class="text-center py-5">
         <div class="display-4 empty-accent mb-2"><i class="bi bi-link-45deg"></i></div>
         <h5 class="mb-2">No links yet</h5>
-        <p class="text-muted mb-4">Click “Add” to save your first URL to the library.</p>
+        <p class="text-muted mb-4">Click "Add" to save your first URL to the library.</p>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">
           <i class="bi bi-plus-circle"></i> Add URL
         </button>
       </div>
     {% endif %}
   </div>
-  
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
 
+{% block extra_js %}
   {% if edit_mode %}
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -250,5 +232,4 @@
     });
   </script>
   {% endif %}
-</body>
-</html>
+{% endblock %}

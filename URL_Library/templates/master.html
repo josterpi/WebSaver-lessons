@@ -3,61 +3,19 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>URL Library</title>
-
-  <!-- Bootstrap 5.3 -->
+  <title>{% block title %}WebSaver{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- header with website title -->
-    <header class="text-white py-3 px-4" style="background-color: #6c63ff;">
-        <h2 class="m-0">WebSaver.com</h2>
-    </header>
+  <header class="text-white py-3 px-4" style="background-color: #6c63ff;">
+    <h2 class="m-0">WebSaver.com</h2>
+  </header>
 
-{% block body %}
+  {% block body %}{% endblock %}
 
-{% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
 </body>
-<style>
-/* for QR image */
-.image-container {
-  width: auto;
-  height: auto;
-}
-.image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-/* Navbar styles */
-
-    /* Ensure nav links inside collapse have padding and a pointer cursor */
-.navbar-nav .nav-link {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-    /* Hover/focus effect */
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link:focus {
-  background-color: #e9ecef; /* light grey bg on hover */
-  color: rgb(13 202 240); /* Bootstrap primary blue on hover */
-  border-radius: 0.25rem;
-}
-
-    /* On small screens (collapsed menu), make sure links fill width */
-@media (max-width: 991.98px) {
-  .navbar-nav .nav-link {
-    width: 100%;
-  }
-}
-
-.navbar-toggler {
-  box-shadow: none !important;  /* Remove any box-shadow */
-}
-
-</style>
 </html>
