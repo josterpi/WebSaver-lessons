@@ -20,6 +20,4 @@ def generate_qr_code(url, name, size=6, border_size=4, color1='black', color2='w
     full_path = os.path.join(qr_code_dir, file_name)
     img.save(full_path)
     
-    # Return relative path (for database and URLs)
-    # FIXME This gets saved in the DB which will break if settings.MEDIA_ROOT ever changes 
-    return f'/media/qr_codes/{file_name}'
+    return f'{settings.MEDIA_URL}qr_codes/{file_name}'
