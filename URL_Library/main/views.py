@@ -102,6 +102,8 @@ def update_url(request, pk):
 
 # delete view
 def delete_url(request, pk):
+    if request.method != 'POST':
+        return redirect('myurls_library')
     saved_url = get_object_or_404(UserContent, id=pk)
     user_id = request.session.get('user_id')
 

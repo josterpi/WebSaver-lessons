@@ -190,9 +190,12 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <a href="{% url 'delete_url' i.id %}" class="btn btn-danger">
-                    <i class="bi bi-trash3"></i> Yes, delete
-                  </a>
+                  <form method="POST" action="{% url 'delete_url' i.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                      <i class="bi bi-trash3"></i> Yes, delete
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
