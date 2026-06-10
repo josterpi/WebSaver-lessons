@@ -31,6 +31,7 @@ def add_url(request):
 
 #Emmanuel says we dont need this anymore i am not sure why we dont i will ask him tonight
 def url_library(request):
+    # BUG This doesn't check for a logged in user. It just shows all the links.
     library = UserContent.objects.all()
     libraryform = URLForm()
     return render(request, 'library.html', {
@@ -43,6 +44,7 @@ def url_library(request):
 def myurls_library(request):
     user_id = request.session.get('user_id')
     library = UserContent.objects.filter(user=user_id) if user_id else UserContent.objects.none()
+    # BUG If the user isn't logged in, redirect to login page instead of showing empty library
 
     edit_mode = False
     edit_id = request.GET.get('edit')
