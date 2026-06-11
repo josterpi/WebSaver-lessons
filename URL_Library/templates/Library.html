@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebSaver</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #6c63ff;
+      --accent-100: #eef0ff;
+      --text-muted: #6c757d;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--accent-100), #ffffff);
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    }
+    .navbar-brand { color: var(--accent) !important; font-weight: 600; }
+    .nav-link:hover, .nav-link.active { color: var(--accent) !important; }
+
+    /* Buttons */
+    .btn-outline-primary { color: var(--accent); border-color: var(--accent); }
+    .btn-outline-primary:hover,
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* Cards */
+    .card {
+      border: 0;
+      border-radius: 1rem;
+      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+      transition: transform .15s ease, box-shadow .2s ease;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0,0,0,.1); }
+    .title { font-weight: 600; }
+
+    /* Image container */
+    .image-container {
+      width: 100%;
+      height: 180px;
+      background: #fafbff;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+      border-bottom: 1px solid #f1f2f7;
+      padding: .5rem;
+    }
+    .image-container img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* Description */
+    .description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      min-height: 2.5em;
+      white-space: pre-wrap;
+    }
+
+    /* Empty state */
+    .empty-accent { color: var(--accent); font-weight: 600; }
+
+    .soft-badge {
+      background: var(--accent-100);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: .2rem .6rem;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 .2rem rgba(108,99,255,.2);
+    }
+  </style>
+</head>
+<body class="bg-light">
+   <!-- header with website title -->
+  <header class="text-white py-3 px-4" style="background-color: #6c63ff;">
+      <h2 class="m-0">WebSaver.com</h2>
+  </header>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border my-3 mx-3 px-3">
+    <a class="navbar-brand" href="{% url 'how_it_works' %}">
+      About
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a href="{% url 'url_library' %}" class="nav-link active"><i class="bi bi-grid"></i> Library</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'myurls_library' %}" class="nav-link"><i class="bi bi-person-lines-fill"></i> My Library</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalAdd">
+            <i class="bi bi-plus-circle"></i> Add
+          </a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAddLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAddLabel">{% if edit_mode %}Edit URL{% else %}Add URL{% endif %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% if edit_mode %}{% url 'update_url' edit_id %}{% else %}{% url 'add_url' %}{% endif %}">
+            {% csrf_token %}
+            {{ libraryform.as_p }}
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+              <i class="bi bi-check2-circle"></i> {% if edit_mode %}Save Changes{% else %}Submit{% endif %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="container pb-5">
+    {% if library %}
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 class="mb-0">All Links</h5>
+        <span class="soft-badge">{{ library|length }} total</span>
+      </div>
+
+      <div class="row">
+        {% for i in library %}
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100">
+              <div class="card-body pb-0">
+                <!-- Edit -->
+                <a class="float-start btn btn-sm btn-link text-muted px-0"
+                   href="{% url 'myurls_library' %}?edit={{ i.id }}">
+                   <i class="bi bi-three-dots"></i>
+                </a>
+
+                <!-- Delete -->
+                <button type="button" class="btn-close float-end" data-bs-toggle="modal"
+                        data-bs-target="#modal-delete-{{ i.id }}" aria-label="Delete"></button>
+              </div>
+
+              <a href="{{ i.image_path }}" class="image-container" download>
+                <img src="{{ i.image_path }}" alt="{{ i.name }} QR">
+              </a>
+
+              <div class="card-body">
+                <h5 class="title mb-1">{{ i.name }}</h5>
+                <div class="text-muted small mb-2"><em>{{ i.created_at }}</em></div>
+
+                <!-- Inline Description -->
+                {% if i.description %}
+                  <p class="description">{{ i.description }}</p>
+                {% else %}
+                  <p class="description text-muted"><em>No description provided.</em></p>
+                {% endif %}
+
+                <!-- Open Link Button -->
+                <a href="{{ i.url }}" target="_blank" class="btn btn-primary w-100">
+                  <i class="bi bi-box-arrow-up-right"></i> Open: {{ i.name }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delete Modal -->
+          <div class="modal fade" id="modal-delete-{{ i.id }}" tabindex="-1"
+               aria-labelledby="modal-delete-label-{{ i.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modal-delete-label-{{ i.id }}">Delete Item</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  All changes are permanent. Delete <strong>{{ i.name }}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="{% url 'delete_url' i.id %}" class="btn btn-danger">
+                    <i class="bi bi-trash3"></i> Yes, delete
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        <!-- Add Card -->
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 d-flex align-items-stretch">
+            <button class="btn btn-outline-primary h-100 w-100" data-bs-toggle="modal" data-bs-target="#modalAdd">
+              <i class="bi bi-plus-circle-dotted"></i> Add New URL
+            </button>
+          </div>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="text-center py-5">
+        <div class="display-4 empty-accent mb-2"><i class="bi bi-link-45deg"></i></div>
+        <h5 class="mb-2">No links yet</h5>
+        <p class="text-muted mb-4">Click “Add” to save your first URL to the library.</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">
+          <i class="bi bi-plus-circle"></i> Add URL
+        </button>
+      </div>
+    {% endif %}
+  </div>
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% if edit_mode %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalEl = document.getElementById('modalAdd');
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    });
+  </script>
+  {% endif %}
+</body>
+</html>
